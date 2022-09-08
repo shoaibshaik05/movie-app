@@ -1,14 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 
 
 import './index.css';
 import App from './components/App';
 import rootReducer from './reducers';
+import thunk from 'redux-thunk';
 
 
-const store = createStore(rootReducer);
+
+const logger = ({dispatch, getState}) => (next) => (actions) => {
+  if(typeof actions !== 'function'){
+    console.log('ACTION_TYPE' , actions.type);
+  }
+  next(actions);
+}
+
+
+const store = createStore(rootReducer, applyMiddleware(logger, thunk));
 console.log('store', store);
 // console.log('Before State', store.getState());
 
